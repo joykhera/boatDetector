@@ -13,6 +13,7 @@ class Boat:
         self.coords = None
         self.update_coords(box)
         self.speed = 0.0
+        self.min_dist_from_center = float('inf')
 
     def update_coords(self, box):
         """
@@ -46,7 +47,13 @@ class Boat:
         """
         previous_distance = ((point[0] - self.prev_coords['xmid']) ** 2 + (point[1] - self.prev_coords['ymid']) ** 2) ** 0.5
         current_distance = ((point[0] - self.coords['xmid']) ** 2 + (point[1] - self.coords['ymid']) ** 2) ** 0.5
-        return current_distance < previous_distance
+        # print(f"{self.id}: {self.coords['xmid']}, {self.coords['ymid']} -- {self.prev_coords['xmid']}, {self.prev_coords['ymid']}")
+        # print(f"Previous distance: {previous_distance}, Current distance: {current_distance}")
+        # print(current_distance < previous_distance)
+        new_min = current_distance < previous_distance and current_distance < self.min_dist_from_center
+        if new_min:
+            self.min_dist_from_center = current_distance
+        return new_min
 
     def __str__(self):
         return f"Boat ID: {self.id}, Current Coords: {self.coords}, Previous Coords: {self.prev_coords}, Speed: {self.speed}"
@@ -55,5 +62,4 @@ class Boat:
         cv2.rectangle(frame, (self.coords['x1'], self.coords['y1']), (self.coords['x2'], self.coords['y2']), (0, 255, 0), 2)  # Green color for the box
         label = f"{self.id}: {confidence:.2f}"
         cv2.putText(frame, label, (self.coords['x1'], self.coords['y1'] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-        # cv2.putText(frame, confidence, (self.coords['x1'], self.coords['y1'] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
 
