@@ -15,6 +15,10 @@ while ret:
     frame_ = frame
 
     if ret:
+        # center of image
+        height, width, _ = frame.shape
+        center = (width // 2, height // 2)
+
         results = model.track(frame, persist=True)
 
         for box in results[0].boxes:
@@ -31,14 +35,20 @@ while ret:
                     if id not in boats:
                         boat = Boat(box, id)
                         boats[id] = boat
+                        cv2.imwrite(f'./screenshots/{boat.id}.png', frame)
                     else:
                         boat = boats[id]
                 
                     boat.update_coords(box)
                     boat.draw(frame, confidence)
-                
-                
-                cv2.imwrite('./screenshot.png', frame)
+
+                # screenshot if going closer to the center
+                # edge case: if boat is moving away from center and then comes back, it will take a screenshot
+                # edge case: when boat first enters, might not be grabbing screenshot
+                # ^ probably fixed with line 39
+                if (boat.is_moving_towards_point(center)):
+                    print('Captured screenshot!')
+                    cv2.imwrite(f'./screnshots/{boat.id}.png', frame)
 
 
         # visualize
