@@ -1,6 +1,8 @@
 from ultralytics import YOLO
 import cv2
 from boat import Boat
+from store_images import upload_image
+
 
 # load yolov8 model
 model = YOLO('yolov8x.pt')
@@ -26,27 +28,31 @@ while ret:
             detectedObject = results[0].names[box.cls[0].item()]
             confidence = box.conf.item()
             # print(detectedObject, confidence)
-            
+
             if detectedObject == objectToDetect and confidence > 0.3:
                 # print(box)
                 print(f'{objectToDetect} detected')
                 if box.id:
                     id = box.id.item()
-                    
+
                     if id not in boats:
                         boat = Boat(box, id)
                         boats[id] = boat
-                        cv2.imwrite(f'./screenshots/{boat.id}.png', frame)
+                        screenshot_path = f'./screenshots/{boat.id}.png'
+                        cv2.imwrite(screenshot_path, frame)
                     else:
                         boat = boats[id]
-                
+                        screenshot_path = f'./screenshots/{boat.id}.png'
+
                     boat.update_coords(box)
                     boat.draw(frame, confidence)
 
                     if (boat.is_moving_towards_point(center)):
                         print('Captured screenshot!')
-                        cv2.imwrite(f'./screenshots/{boat.id}.png', frame)
 
+                        cv2.imwrite(screenshot_path, frame)
+                        response = upload_image(screenshot_path)
+                        print(response)
 
         # visualize
         cv2.imshow('frame', frame_)

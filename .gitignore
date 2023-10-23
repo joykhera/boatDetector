@@ -1,2 +1,4 @@
 yolov8x.pt
-__pycache__
+_pycache
+credentials.json
+token.pickle
