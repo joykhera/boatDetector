@@ -14,6 +14,7 @@ class Boat:
         self.update_coords(box)
         self.speed = 0.0
         self.min_dist_from_center = float('inf')
+        self.captured = False
 
     def update_coords(self, box):
         """
