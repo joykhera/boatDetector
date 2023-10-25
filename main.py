@@ -1,7 +1,10 @@
+import os
 from ultralytics import YOLO
 import cv2
 from boat import Boat
 from store_images import upload_image
+import psycopg2
+from dotenv import load_dotenv
 
 
 # load yolov8 model
@@ -9,14 +12,25 @@ model = YOLO('yolov8x.pt')
 cap = cv2.VideoCapture(0)
 objectToDetect = 'boat'
 boats = {}
+load_dotenv()
+print(os.getenv('DBNAME'), os.getenv('DBUSERNAME'), os.getenv('DBPASSWORD'), os.getenv('DBHOST'), os.getenv('DBPORT'))
+connection = psycopg2.connect(
+    database=os.getenv('DBNAME'),
+    user=os.getenv('DBUSERNAME'),
+    password=os.getenv('DBPASSWORD'),
+    host=os.getenv('DBHOST'),
+    port=os.getenv('DBPORT')
+)
+connection.autocommit = True
+cursor = connection.cursor()
 
-ret = True
+success = True
 # read frames
-while ret:
-    ret, frame = cap.read()
+while success:
+    success, frame = cap.read()
     frame_ = frame
 
-    if ret:
+    if success:
         # center of image
         height, width, _ = frame.shape
         center = (width // 2, height // 2)
@@ -51,8 +65,15 @@ while ret:
                         print('Captured screenshot!')
 
                         cv2.imwrite(screenshot_path, frame)
-                        response = upload_image(screenshot_path)
-                        print(response)
+                        response = upload_image(screenshot_path, description=f"Boat {boat.id}", filename=f'boat{boat.id}.png')
+                        mediaItemResults = response['newMediaItemResults'][0]
+
+                        if mediaItemResults['status']['message'] == 'Success':
+                            print(mediaItemResults['mediaItem']['productUrl'])
+                            query = f"INSERT INTO boats (link) VALUES ('{mediaItemResults['mediaItem']['productUrl']}')"
+                            cursor.execute(query)
+                        else:
+                            print(mediaItemResults['status']['message'])
 
         # visualize
         cv2.imshow('frame', frame_)

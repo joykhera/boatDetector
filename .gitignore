@@ -2,3 +2,4 @@ yolov8x.pt
 _pycache
 credentials.json
 token.pickle
+.env

@@ -25,7 +25,7 @@ if not creds or not creds.valid:
 authed_session = AuthorizedSession(creds)
 
 
-def upload_image(image_path):
+def upload_image(image_path, description="Test photo", filename="test.jpg"):
     # read image from file
     with open(image_path, "rb") as f:
         image_contents = f.read()
@@ -44,10 +44,10 @@ def upload_image(image_path):
         headers={'content-type': 'application/json'},
         json={
             "newMediaItems": [{
-                "description": "Test photo",
+                "description": description,
                 "simpleMediaItem": {
                     "uploadToken": upload_token,
-                    "fileName": "test.jpg"
+                    "fileName": filename
                 }
             }]
         }
