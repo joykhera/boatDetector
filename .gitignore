@@ -1,5 +1,6 @@
-yolov8x.pt
-_pycache
-credentials.json
-token.pickle
+detector/yolov8x.pt
+detector/_pycache
+detector/credentials.json
+detector/token.pickle
+client/node_modules
 .env

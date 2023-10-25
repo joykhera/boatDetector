@@ -1,8 +1,8 @@
 import os
 from ultralytics import YOLO
 import cv2
-from boat import Boat
-from store_images import upload_image
+from detector.boat import Boat
+from detector.store_images import upload_image
 import psycopg2
 from dotenv import load_dotenv
 from colorama import Fore, Style
