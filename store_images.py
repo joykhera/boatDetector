@@ -2,11 +2,8 @@ import os
 import pickle
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
 from google.auth.transport.requests import Request
 from google.auth.transport.requests import AuthorizedSession
-from google.oauth2.credentials import Credentials
-
 
 scopes = ['https://www.googleapis.com/auth/photoslibrary.appendonly']
 

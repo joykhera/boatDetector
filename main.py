@@ -14,7 +14,7 @@ cap = cv2.VideoCapture(0)
 objectToDetect = 'boat'
 boats = {}
 load_dotenv()
-print(os.getenv('DBNAME'), os.getenv('DBUSERNAME'), os.getenv('DBPASSWORD'), os.getenv('DBHOST'), os.getenv('DBPORT'))
+
 connection = psycopg2.connect(
     database=os.getenv('DBNAME'),
     user=os.getenv('DBUSERNAME'),
@@ -85,5 +85,5 @@ while success:
 
         # visualize
         cv2.imshow('frame', frame_)
-        if cv2.waitKey(25) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord('q'):
             break
