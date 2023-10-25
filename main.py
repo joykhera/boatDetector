@@ -5,6 +5,7 @@ from boat import Boat
 from store_images import upload_image
 import psycopg2
 from dotenv import load_dotenv
+from colorama import Fore, Style
 
 
 # load yolov8 model
@@ -34,7 +35,6 @@ while success:
         # center of image
         height, width, _ = frame.shape
         center = (width // 2, height // 2)
-        print('center', center)
 
         results = model.track(frame, persist=True)
 
@@ -45,13 +45,14 @@ while success:
 
             if detectedObject == objectToDetect and confidence > 0.3:
                 # print(box)
-                print(f'{objectToDetect} detected')
+                print(f'{Fore.BLUE}{objectToDetect} detected{Style.RESET_ALL}')
                 if box.id:
                     id = box.id.item()
 
                     if id not in boats:
                         boat = Boat(box, id)
                         boats[id] = boat
+                        # ? Should we store screenshot path in the boat object
                         screenshot_path = f'./screenshots/{boat.id}.png'
                         cv2.imwrite(screenshot_path, frame)
                     else:
@@ -61,19 +62,26 @@ while success:
                     boat.update_coords(box)
                     boat.draw(frame, confidence)
 
+                    # If boat is moving towards the center, update the local screenshot
                     if (boat.is_moving_towards_point(center)):
-                        print('Captured screenshot!')
-
+                        print('Updated local screenshot!')
                         cv2.imwrite(screenshot_path, frame)
-                        response = upload_image(screenshot_path, description=f"Boat {boat.id}", filename=f'boat{boat.id}.png')
-                        mediaItemResults = response['newMediaItemResults'][0]
+                    
+                    # Boat isn't moving towards center,
+                    # if it hasn't already been captured,
+                    # capture to cloud and update flag
+                    else:
+                        if (boat.captured == False):
+                            response = upload_image(screenshot_path, description=f"Boat {boat.id}", filename=f'boat{boat.id}.png')
+                            mediaItemResults = response['newMediaItemResults'][0]
 
-                        if mediaItemResults['status']['message'] == 'Success':
-                            print(mediaItemResults['mediaItem']['productUrl'])
-                            query = f"INSERT INTO boats (link) VALUES ('{mediaItemResults['mediaItem']['productUrl']}')"
-                            cursor.execute(query)
-                        else:
-                            print(mediaItemResults['status']['message'])
+                            if mediaItemResults['status']['message'] == 'Success':
+                                print(mediaItemResults['mediaItem']['productUrl'])
+                                query = f"INSERT INTO boats (link) VALUES ('{mediaItemResults['mediaItem']['productUrl']}')"
+                                cursor.execute(query)
+                                boat.captured = True
+                            else:
+                                print(mediaItemResults['status']['message'])
 
         # visualize
         cv2.imshow('frame', frame_)
