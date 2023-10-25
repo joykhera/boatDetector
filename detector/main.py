@@ -16,11 +16,11 @@ boats = {}
 load_dotenv()
 
 connection = psycopg2.connect(
-    database=os.getenv('DBNAME'),
-    user=os.getenv('DBUSERNAME'),
-    password=os.getenv('DBPASSWORD'),
-    host=os.getenv('DBHOST'),
-    port=os.getenv('DBPORT')
+    database=os.getenv('POSTGRES_DB'),
+    user=os.getenv('POSTGRES_USER'),
+    password=os.getenv('POSTGRES_PASSWORD'),
+    host=os.getenv('POSTGRES_HOST'),
+    port=os.getenv('POSTGRES_PORT')
 )
 connection.autocommit = True
 cursor = connection.cursor()
