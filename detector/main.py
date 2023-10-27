@@ -6,6 +6,7 @@ from store_images import upload_image
 import psycopg2
 from dotenv import load_dotenv
 from colorama import Fore, Style
+import threading
 
 
 # load yolov8 model
@@ -24,6 +25,15 @@ connection = psycopg2.connect(
 )
 connection.autocommit = True
 cursor = connection.cursor()
+
+
+def save_image(screenshot_path, id):
+    print('Saving image to cloud...')
+    img_url = upload_image(screenshot_path, id=id)
+    print(img_url)
+    query = f"INSERT INTO boats (link) VALUES ('{img_url}')"
+    cursor.execute(query)
+
 
 success = True
 # read frames
@@ -65,17 +75,15 @@ while success:
                     if (boat.is_moving_towards_point(center)):
                         print('Updated local screenshot!')
                         cv2.imwrite(screenshot_path, frame)
-                    
+
                     # Boat isn't moving towards center,
                     # if it hasn't already been captured,
                     # capture to cloud and update flag
                     else:
                         if (boat.captured == False):
-                            response = upload_image(screenshot_path, description=f"Boat {boat.id}", filename=f'boat{boat.id}.png')
-                            img_url = response['baseUrl']
-                            query = f"INSERT INTO boats (link) VALUES ('{img_url}')"
-                            cursor.execute(query)
                             boat.captured = True
+                            thr = threading.Thread(target=save_image, args=(screenshot_path, boat.id), kwargs={})
+                            thr.start()
 
         # visualize
         cv2.imshow('frame', frame_)

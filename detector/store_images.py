@@ -1,12 +1,22 @@
 import os
 import pickle
 from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 from google.auth.transport.requests import AuthorizedSession
 from dotenv import load_dotenv
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+import cloudinary
+
+cloudinary.config(
+    cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.getenv('CLOUDINARY_API_KEY'),
+    api_secret=os.getenv('CLOUDINARY_API_SECRET')
+)
 
 load_dotenv(dotenv_path='../.env')
+config = cloudinary.config(secure=True)
 
 scopes = ['https://www.googleapis.com/auth/photoslibrary.appendonly']
 
@@ -25,7 +35,11 @@ if not creds or not creds.valid:
 authed_session = AuthorizedSession(creds)
 
 
-def upload_image(image_path, description="Test photo", filename="test.jpg"):
+def upload_image(image_path, id):
+    description = f"Boat {id}",
+    public_id = f"boat{id}"
+    filename = f"boat{id}.png"
+    
     try:
         # read image from file
         with open(image_path, "rb") as f:
@@ -45,7 +59,7 @@ def upload_image(image_path, description="Test photo", filename="test.jpg"):
             headers={'content-type': 'application/json'},
             json={
                 "newMediaItems": [{
-                    "description": description,
+                    # "description": description,
                     "simpleMediaItem": {
                         "uploadToken": upload_token,
                         "fileName": filename
@@ -67,12 +81,16 @@ def upload_image(image_path, description="Test photo", filename="test.jpg"):
                 ]
             }
         )
-        
+
         get_from_album_response = authed_session.get(
             f"https://photoslibrary.googleapis.com/v1/mediaItems/{media_item_id}"
         )
         
-        return get_from_album_response.json()
+        base_url = get_from_album_response.json()['baseUrl']
+        cloudinary.uploader.upload(base_url, public_id=public_id, unique_filename=False, overwrite=True)
+        srcURL = cloudinary.CloudinaryImage(public_id).build_url()
+        
+        return srcURL
     
     except Exception as e:
         print(e)
