@@ -20,7 +20,6 @@ app.use(
         graphiql: true
     })
 );
-console.log('schema', schema)
 
 app.get('/', async (req, res, next) => {
     res.send(await fs.readFile('index.html', 'utf8'))

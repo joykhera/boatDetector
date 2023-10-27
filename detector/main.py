@@ -1,8 +1,8 @@
 import os
 from ultralytics import YOLO
 import cv2
-from detector.boat import Boat
-from detector.store_images import upload_image
+from boat import Boat
+from store_images import upload_image
 import psycopg2
 from dotenv import load_dotenv
 from colorama import Fore, Style
@@ -13,7 +13,7 @@ model = YOLO('yolov8x.pt')
 cap = cv2.VideoCapture(0)
 objectToDetect = 'boat'
 boats = {}
-load_dotenv()
+load_dotenv(dotenv_path='../.env')
 
 connection = psycopg2.connect(
     database=os.getenv('POSTGRES_DB'),
@@ -32,7 +32,6 @@ while success:
     frame_ = frame
 
     if success:
-        # center of image
         height, width, _ = frame.shape
         center = (width // 2, height // 2)
 
@@ -73,15 +72,10 @@ while success:
                     else:
                         if (boat.captured == False):
                             response = upload_image(screenshot_path, description=f"Boat {boat.id}", filename=f'boat{boat.id}.png')
-                            mediaItemResults = response['newMediaItemResults'][0]
-
-                            if mediaItemResults['status']['message'] == 'Success':
-                                print(mediaItemResults['mediaItem']['productUrl'])
-                                query = f"INSERT INTO boats (link) VALUES ('{mediaItemResults['mediaItem']['productUrl']}')"
-                                cursor.execute(query)
-                                boat.captured = True
-                            else:
-                                print(mediaItemResults['status']['message'])
+                            img_url = response['baseUrl']
+                            query = f"INSERT INTO boats (link) VALUES ('{img_url}')"
+                            cursor.execute(query)
+                            boat.captured = True
 
         # visualize
         cv2.imshow('frame', frame_)
