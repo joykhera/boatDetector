@@ -23,6 +23,14 @@ app.get('/', async (req, res, next) => {
     res.send(await fs.readFile('index.html', 'utf8'))
 })
 
+app.get('/about', async (req, res, next) => {
+    res.send(await fs.readFile('public/about.html', 'utf8'))
+})
+
+app.get('/docs', async (req, res, next) => {
+    res.send(await fs.readFile('public/docs.html', 'utf8'))
+})
+
 app.listen(port, () => {
     console.log(`Server running at: http://localhost:${port}/`)
 })
