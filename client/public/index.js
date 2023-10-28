@@ -1,5 +1,5 @@
-import PhotoSwipeLightbox from './photoswipe/dist/photoswipe-lightbox.esm.min.js';
-import PhotoSwipe from './photoswipe/dist/photoswipe.esm.js';
+import PhotoSwipeLightbox from './photo-swipe/photoswipe-lightbox.esm.min.js';
+import PhotoSwipe from './photo-swipe/photoswipe.esm.js';
 
 const lightbox = new PhotoSwipeLightbox({
     gallery: '#my-gallery',
