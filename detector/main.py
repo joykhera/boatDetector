@@ -28,7 +28,7 @@ cursor = connection.cursor()
 
 
 def save_image(screenshot_path, id):
-    print('Saving image to cloud...')
+    print(f'{Fore.RED}Saving image to cloud...{Style.RESET_ALL}')
     img_url = upload_image(screenshot_path, id=id)
     print(img_url)
     query = f"INSERT INTO boats (link) VALUES ('{img_url}')"

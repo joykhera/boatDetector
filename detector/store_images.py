@@ -8,6 +8,9 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 import cloudinary
+import traceback
+
+load_dotenv(dotenv_path='../.env')
 
 cloudinary.config(
     cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
@@ -15,7 +18,6 @@ cloudinary.config(
     api_secret=os.getenv('CLOUDINARY_API_SECRET')
 )
 
-load_dotenv(dotenv_path='../.env')
 config = cloudinary.config(secure=True)
 
 scopes = ['https://www.googleapis.com/auth/photoslibrary.appendonly']
@@ -68,6 +70,7 @@ def upload_image(image_path, id):
             }
         )
 
+        # print('batch_create_response.json()', batch_create_response.json())
         media_item_id = batch_create_response.json()['newMediaItemResults'][0]['mediaItem']['id']
         
         authed_session.post(
@@ -93,5 +96,6 @@ def upload_image(image_path, id):
         return srcURL
     
     except Exception as e:
+        print(traceback.print_exc())
         print(e)
         return {'error': e}
