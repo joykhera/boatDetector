@@ -4,7 +4,12 @@ import fs from 'fs/promises'
 import expressGraphQl from 'express-graphql'
 import schema from './schema/index.js'
 
-dotenv.config({ path: '../.env' });
+
+if(location.hostname === "localhost") {
+    dotenv.config({ path: '../.env' });
+} else {
+    dotenv.config({ path: './.env' });
+}
 
 const app = express()
 const port = process.env.EXPRESS_PORT;
