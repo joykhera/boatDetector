@@ -1,4 +1,13 @@
-import PhotoSwipeLightbox from './photoswipe/dist/photoswipe-lightbox.esm.js';
+import PhotoSwipeLightbox from './photoswipe/dist/photoswipe-lightbox.esm.min.js';
+import PhotoSwipe from './photoswipe/dist/photoswipe.esm.js';
+
+const lightbox = new PhotoSwipeLightbox({
+    gallery: '#my-gallery',
+    children: 'a',
+    pswpModule: () => import(PhotoSwipe)
+});
+
+lightbox.init();
 
 const response = await fetch("/graphql", {
     method: "POST",
@@ -17,6 +26,7 @@ const imgHeight = 1080
 for (const boat of boats) {
     const aTag = document.createElement('a');
     aTag.href = boat.link;
+    aTag.setAttribute('data-pswp-src', boat.link);
     aTag.setAttribute('data-pswp-width', imgWidth);
     aTag.setAttribute('data-pswp-height', imgHeight);
     aTag.setAttribute('target', '_blank');
@@ -25,11 +35,3 @@ for (const boat of boats) {
     aTag.appendChild(imgTag);
     gallery.appendChild(aTag);
 }
-
-const lightbox = new PhotoSwipeLightbox({
-    gallery: '#my-gallery',
-    children: 'a',
-    pswpModule: () => import('photoswipe/dist/photoswipe.esm.js')
-});
-
-lightbox.init();
