@@ -1,0 +1,81 @@
+/* Resetting some default browser styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;  /* You can change this to your preferred font-family */
+    background-color: #f0f0f0;
+    color: #333;
+}
+/* Container for the about page */
+.about-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 1px 20px;
+    background-color: #fff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+/* Heading style */
+h1 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #2980b9;
+}
+
+.about-title {
+    text-align: center;
+}
+/* Description style */
+p {
+    font-size: 18px;
+    line-height: 1.5;
+}
+/* Link style */
+a {
+    text-decoration: none;
+    color: #2980b9;
+}
+a:hover {
+    text-decoration: underline;
+}
+/* Footer style */
+.footer {
+    text-align: center;
+    margin-top: 20px;
+    color: #777;
+}
+/* Style for the contact information component */
+.contact-info {
+    max-width: 800px;
+    /* margin-top: 40px; */
+    margin: 20px auto;
+    padding: 20px 40px;
+    background-color: #fff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    color: #333;
+}
+/* Style for the contact link */
+.contact-link {
+    text-decoration: none;
+    color: #2980b9;
+}
+.contact-link:hover {
+    text-decoration: underline;
+}
+.return-type {
+    display: inline-block;
+    margin-left: 5px;
+    font-weight: bold;
+}
+.docs-h3 {
+    font-size: 1.17em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+  }
+.docs-section {
+    margin: 20px 0;
+}

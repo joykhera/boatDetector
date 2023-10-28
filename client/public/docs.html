@@ -1,92 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./navbar.css">
-    <title>GraphQL API Documentation</title>
-    <style>
-        /* Add your CSS styles here for documentation layout and formatting */
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        h1, h2 {
-            color: #333;
-        }
-        p, code {
-            margin: 10px 0;
-        }
-    </style>
+    <link rel="stylesheet" href="./docs.css">
+    <title>GraphQL Queries Documentation</title>
 </head>
+
 <body>
     <div class="navbar">
         <a class="navbar-logo navbar-link" href="/">BOATS</a>
         <a class="navbar-link" href="/about">about</a>
         <a class="navbar-link" href="/docs">docs</a>
     </div>
-    <h1>GraphQL API Documentation</h1>
 
-    <h2>Introduction</h2>
-    <p>
-        Welcome to the documentation for our GraphQL API. This API allows you to retrieve data in a flexible and efficient way. In this document, we'll cover the basics of making queries to our API.
-    </p>
+    <h1 class="about-title">GraphQL Boat Queries Documentation</h1>
 
-    <h2>Getting Started</h2>
-    <p>
-        To use our GraphQL API, you need to send a POST request to our API endpoint. You should set the "Content-Type" header to "application/json" and include your query in the request body.
-    </p>
-    <pre><code>
-        POST /graphql
-        Content-Type: application/json
+    <!-- Documentation for getBoat -->
+    <div class="about-container">
+        <h2>getBoat</h2>
+        <p><strong>Description:</strong> Fetch a specific boat by its ID.</p>
 
-        {
-            "query": "your GraphQL query here"
+        <h3>Arguments:</h3>
+        <ul>
+            <li><strong>id (GraphQLID):</strong> The ID of the boat to be retrieved.</li>
+        </ul>
+
+        <div class="docs-section">
+            <span class="docs-h3">Return Type:</span>
+            <span class="docs-p">BoatType</span>
+        </div>
+
+        <h3>Example:</h3>
+        <pre>
+    {
+        getBoat(id: 1) {
+            id
+            link
+            size
+            speed
+            timestamp
         }
-    </code></pre>
+    }
+    </pre>
+    </div>
 
-    <h2>Query Structure</h2>
-    <p>
-        GraphQL queries are structured as a JSON object with a "query" field that contains your query. Below is an example of a simple query to retrieve information about boats:
-    </p>
-    <pre><code>
-        {
-            "query": "{
-                boats {
-                    id
-                    name
-                    type
-                }"
+    <!-- Documentation for getBoats -->
+    <div class="about-container">
+        <h2>getBoats</h2>
+        <p><strong>Description:</strong> Fetch all boats from the database.</p>
+
+        <span class="docs-h3">Arguments:</span>
+        <span class="docs-p">None</span>
+
+        <div class="docs-section">
+            <span class="docs-h3">Return Type:</span>
+            <span class="docs-p">Array of BoatType</span>
+        </div>
+        
+        <h3>Example:</h3>
+        <pre>
+    {
+        getBoats {
+            id
+            link
+            size
+            speed
+            timestamp
         }
-    </code></pre>
+    }
+    </pre>
+    </div>
 
-    <h2>Query Variables</h2>
-    <p>
-        You can also include variables in your query for more dynamic queries. Use the "variables" field in your request and define the variables in your query with placeholders. For example:
-    </p>
-    <pre><code>
-        {
-            "query": "query GetBoat($boatId: ID!) {
-                boat(id: $boatId) {
-                    id
-                    name
-                    type
-                }
-            }",
-            "variables": {
-                "boatId": "123"
-            }
-        }
-    </code></pre>
-
-    <h2>Response</h2>
-    <p>
-        The API will respond with the data you requested. The structure of the response corresponds to the structure of your query. Check the "data" field in the response for your query results.
-    </p>
-
-    <h2>Conclusion</h2>
-    <p>
-        This is a basic overview of how to query our GraphQL API. You can explore our API further by referring to our schema and documentation. Feel free to experiment with different queries and explore the available data.
-    </p>
 </body>
+
 </html>
