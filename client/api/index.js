@@ -2,7 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import fs from 'fs/promises'
 import expressGraphQl from 'express-graphql'
-import schema from './schema/index.js'
+import schema from '../schema/index.js'
 
 
 if(location.hostname === "localhost") {
