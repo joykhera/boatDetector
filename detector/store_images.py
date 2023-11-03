@@ -70,8 +70,11 @@ def upload_image(image_path, id):
             }
         )
 
-        # print('batch_create_response.json()', batch_create_response.json())
-        media_item_id = batch_create_response.json()['newMediaItemResults'][0]['mediaItem']['id']
+        batch_create_response_json = batch_create_response.json()
+        if 'error' in batch_create_response_json:
+            raise Exception(batch_create_response_json['error'])
+
+        media_item_id = batch_create_response_json['newMediaItemResults'][0]['mediaItem']['id']
         
         authed_session.post(
             f"https://photoslibrary.googleapis.com/v1/albums/{os.getenv('ALBUM_ID')}:batchAddMediaItems",
@@ -93,7 +96,7 @@ def upload_image(image_path, id):
         cloudinary.uploader.upload(base_url, public_id=public_id, unique_filename=False, overwrite=True)
         srcURL = cloudinary.CloudinaryImage(public_id).build_url()
         
-        return srcURL
+        return {'img_url': srcURL}
     
     except Exception as e:
         print(traceback.print_exc())

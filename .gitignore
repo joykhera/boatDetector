@@ -2,5 +2,7 @@ detector/yolov8x.pt
 detector/_pycache
 detector/credentials.json
 detector/token.pickle
+detector/data
+detector/archive.zip
 client/node_modules
 .env
