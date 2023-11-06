@@ -11,6 +11,10 @@ mediapipe = "0.10.0"
 colorama = "^0.4.6"
 ultralytics = "^8.0.203"
 psycopg2 = "^2.9.9"
+google-auth-oauthlib = "^1.1.0"
+setuptools = "^68.2.2"
+python-dotenv = "^1.0.0"
+cloudinary = "^1.36.0"
 
 
 [build-system]

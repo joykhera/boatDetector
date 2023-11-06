@@ -6,7 +6,7 @@ const getBoats = {
     type: new GraphQLList(BoatType), // Using GraphQLList to indicate an array of BoatType
     async resolve() {  // Add the async keyword here
         console.log("getAllBoats");
-        const query = `SELECT * FROM boats`;
+        const query = `SELECT * FROM boats ORDER BY timestamp DESC`;
         try {
             const response = await db.many(query);  // Use await here
             console.log(response);

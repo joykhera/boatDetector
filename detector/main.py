@@ -26,20 +26,25 @@ connection = psycopg2.connect(
 connection.autocommit = True
 cursor = connection.cursor()
 error = False
+saving = False
 
 
 def save_image(screenshot_path, id):
-    print(f'{Fore.RED}Saving image to cloud...{Style.RESET_ALL}')
-    upload_image_response = upload_image(screenshot_path, id=id)
-    if 'error' in upload_image_response:
-        print(f'{Fore.RED}Error uploading image to cloud!{Style.RESET_ALL}')
-        global error
-        error = True
-        return
-    img_url = upload_image_response['img_url']
-    print(img_url)
-    query = f"INSERT INTO boats (link) VALUES ('{img_url}')"
-    cursor.execute(query)
+    global saving
+    if not saving:
+        saving = True
+        print(f'{Fore.RED}Saving image to cloud...{Style.RESET_ALL}')
+        upload_image_response = upload_image(screenshot_path, id=id)
+        if 'error' in upload_image_response:
+            print(f'{Fore.RED}Error uploading image to cloud!{Style.RESET_ALL}')
+            global error
+            error = True
+            return
+        img_url = upload_image_response['img_url']
+        print(img_url)
+        query = f"INSERT INTO boats (link) VALUES ('{img_url}')"
+        cursor.execute(query)
+        saving = False
 
 
 def detect(frame):
@@ -51,7 +56,7 @@ def detect(frame):
         detectedObject = results[0].names[box.cls[0].item()]
         confidence = box.conf.item()
 
-        if detectedObject == objectToDetect and confidence > 0.3:
+        if detectedObject == objectToDetect and confidence > 0.5:
             print(f'{Fore.BLUE}{objectToDetect} detected{Style.RESET_ALL}')
             id = uuid.uuid4()
 
@@ -82,13 +87,13 @@ def detect(frame):
 success = True
 while success:
     success, frame = cap.read()
-    print('errorr', error)
+
     if error:
         break
     
     if success:
         frame = detect(frame)
-        # cv2.imshow('frame', frame)
+        cv2.imshow('frame', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 

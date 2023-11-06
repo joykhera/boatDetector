@@ -4,5 +4,6 @@ detector/credentials.json
 detector/token.pickle
 detector/data
 detector/archive.zip
+detector/screenshots
 client/node_modules
 .env
